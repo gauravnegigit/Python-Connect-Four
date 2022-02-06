@@ -61,7 +61,7 @@ def isWinner(board, piece):
 
 def redraw(board):
 
-	WIN.fill(BLUE)
+	pygame.draw.rect(WIN , BLUE , (0 , SQUARESIZE , COLUMNS * SQUARESIZE , ROWS * SQUARESIZE))
 
 	for c in range(COLUMNS):
 		for r in range(ROWS):
@@ -86,13 +86,13 @@ def main():
 	#turn of current player
 	turn = 0 
 	board = [[0 for _ in range(COLUMNS)] for _ in range(ROWS)]
-	print(board)
+
+
 	# main loop
 	while run :
 		clock.tick(FPS)
 
 		redraw(board)
-		pygame.draw.rect(WIN , BLACK ,(0 , 0 , WIDTH , SQUARESIZE ))
 		for event in pygame.event.get() :
 			if event.type == pygame.QUIT :
 				run = False
@@ -100,12 +100,13 @@ def main():
 				quit()
 
 			if event.type == pygame.MOUSEMOTION :
+				pygame.draw.rect(WIN , BLACK ,(0 , 0 , WIDTH , SQUARESIZE ))
 				posx = event.pos[0]
+
 				if turn == 0 :
 					pygame.draw.circle(WIN , RED , (posx , SQUARESIZE//2) , RADIUS)
 				else :
 					pygame.draw.circle(WIN , YELLOW , (posx , SQUARESIZE//2) , RADIUS)
-
 
 			if event.type == pygame.MOUSEBUTTONDOWN :
 				pygame.draw.rect(WIN , BLACK , (0,0 , WIDTH  , SQUARESIZE))
@@ -116,7 +117,6 @@ def main():
 				if is_valid_position(board , col):
 					row = get_next_row(board , col)
 					drop_piece(board , row, col , turn + 1)
-					print(board)
 
 				if turn == 0 :
 					color = RED 
@@ -124,11 +124,11 @@ def main():
 					color = YELLOW
 
 				if isWinner(board , turn + 1):
-					label = FONT.render(f"Player {(turn + 1)} wins !" , 1, color)
+					text= FONT.render(f"Player {(turn + 1)} wins !" , 1, color)
 
 					redraw(board)
 					pygame.draw.rect(WIN , BLACK ,(0 , 0 , WIDTH , SQUARESIZE ))
-					WIN.blit(label , (40 , 10))
+					WIN.blit(text , (WIDTH//2 - text.get_width()//2 , 10))
 					pygame.display.update()
 					run = False
 					board = reset_board()
